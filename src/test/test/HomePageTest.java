@@ -1,49 +1,33 @@
 package test;
 
-import base.BasePage;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
+import bases.BasesTest;
+import bases.BasesTest;
+import com.relevantcodes.extentreports.LogStatus;
+import org.testng.Assert;
+import org.testng.IDynamicGraph;
+import org.testng.ITestResult;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import pages.HomePage;
 
-public class HomePageTest extends BasePage {
-    protected WebDriver driver;
 
-    public HomePageTest(WebDriver driver){
-        super(driver);
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+import java.lang.reflect.Method;
+
+public class HomePageTest extends BasesTest {
+    HomePage homePage;
+
+    @BeforeMethod(alwaysRun = true)
+    public void localSetUp(Method method, ITestResult result){
+        setUp(method, result);
+        homePage = new HomePage(getDriver());
     }
 
-    @FindBy(id = "user-name")
-    public WebElement usernameField;
-
-    @FindBy(id = "password")
-    public WebElement passwordField;
-
-    @FindBy(id = "login-button")
-    public WebElement logInBtn;
-
-    @FindBy(xpath = "//h3[@data-test='error']")
-    public WebElement errorMsg;
-
-    public void logIn(String userType){
-        String username = "";
-        String password = "secret_sauce";
-
-        switch (userType){
-            case "standard":
-                username = "standard_user";
-                break;
-            case "locked":
-                username = "locked_out_user";
-                break;
-            default:
-                System.out.println("Invalid username");
-        }
-        sendKeys(usernameField, username);
-        sendKeys(passwordField, password);
-        click(logInBtn);
+    @Test
+    public void verifyTitle(){
+        extentTest.log(LogStatus.INFO,"Verify Title Of HomePage");
+        screenshot.takeScreenshotAndLog();
+        Assert.assertEquals(getDriver().getTitle(), "TLA Automation");
     }
 
-}
+
+    }

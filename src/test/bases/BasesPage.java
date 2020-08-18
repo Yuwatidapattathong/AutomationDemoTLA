@@ -1,4 +1,5 @@
 package bases;
+import com.relevantcodes.extentreports.ExtentTest;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -6,15 +7,15 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestResult;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class BasesPage {
     private WebDriver driver;
-
     public BasesPage(WebDriver driver){
         this.driver = driver;
-
         PageFactory.initElements(driver, this);
     }
     public void sleep(long milliseconds){
@@ -62,7 +63,7 @@ public class BasesPage {
     }
     public void moveIntoView(WebElement element){
         try{
-            ((JavascriptExecutor)driver).executeScript("arguments[0].schrollIntoView(true);", element);
+            ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView(true);", element);
         }catch (Exception e){
             e.printStackTrace();
         }

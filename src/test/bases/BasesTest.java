@@ -28,45 +28,35 @@ import java.util.concurrent.TimeUnit;
 public class BasesTest {
     private static final ThreadLocal<WebDriver> drivers = new ThreadLocal<>();
     private static String propertyPath = "src/main/resources/config/configuration.properties";
-
     ExtentReports extentReports;
     protected ExtentTest extentTest;
     protected ScreenShot screenshot;
-
+    String suiteName = "";
     @BeforeSuite(alwaysRun = true)
     public void startReport(ITestContext iTestContext){
         extentReports = ExtentReportManager.loadConfig();
-
+        suiteName = iTestContext.getCurrentXmlTest().getSuite().getName();
     }
-
     @BeforeMethod(alwaysRun = true)
-    public void setUp(Method method, ITestResult result){
+    public void setUp(Method method, ITestResult result) {
         initializeDriver(ConfigReader.readProperty("browser", propertyPath));
-
         extentTest = extentReports.startTest((this.getClass().getSimpleName() + " : " + method.getName()), method.getName());
         extentTest.assignAuthor("Tester");
-
-
+        extentTest.assignCategory(suiteName);
         extentTest.log(LogStatus.INFO, result.getMethod().getDescription());
-
-        getDriver().get(ConfigReader.readProperty("url", propertyPath));
-
         screenshot = new ScreenShot(getDriver(), extentTest);
+        getDriver().get(ConfigReader.readProperty("url", propertyPath));
     }
-
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result){
         ExtentReportManager.logExtent(extentReports, extentTest, result);
         getDriver().quit();
     }
-
     @AfterSuite(alwaysRun = true)
     public void closeReport(){
         extentReports.flush();
         extentReports.close();
     }
-
-
     private void initializeDriver(String browser){
         WebDriver driver = null;
         switch (browser){
@@ -83,8 +73,8 @@ public class BasesTest {
         }
         drivers.set(driver);
         getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        getDriver().manage().window().maximize();
     }
-
     public WebDriver getDriver(){
         WebDriver driver = drivers.get();
         if (driver == null){
@@ -92,5 +82,4 @@ public class BasesTest {
         }
         return driver;
     }
-
 }

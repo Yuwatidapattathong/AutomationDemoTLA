@@ -2,6 +2,7 @@ package utils;
 
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
+import jdk.nashorn.internal.objects.NativeMath;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -12,13 +13,19 @@ import java.io.IOException;
 import java.util.Base64;
 
 public class ScreenShot {
-    WebDriver driver;
-    ExtentTest test;
+
+
+    private static Object driver;
+    private static ExtentTest test;
+
+
+
     public ScreenShot(WebDriver driver, ExtentTest test){
         this.driver = driver;
         this.test = test;
     }
-    public String takeScreenshotAndLog() {
+    public static String takeScreenshotAndLog() {
+
         File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         byte[] fileContent = new byte[0];
         try {
